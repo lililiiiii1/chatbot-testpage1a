@@ -1,2 +1,4 @@
 streamlit
 openai
+firebase-admin
+PyPDF2

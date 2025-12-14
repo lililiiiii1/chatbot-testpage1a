@@ -1,0 +1,21 @@
+[server]
+headless = true
+port = 8501
+
+[firebase]
+type = "service_account"
+project_id = "db-streamlit-337bc"
+private_key_id = "da09896a48ad79d38edd2ec2f94792e110b358d8"
+private_key = "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQDlcWksCd3RsWq4\nokJG6bZef7Gcfe1/OEapmS6IHWzJymn+V8W3nlf+H86q8/0aNrHzmT8biZQLds0C\nYTK+IBxvzb/OtsH6E/WmsCzqSB8JoU3pqjkepzxUQKq6nsVKgk1OlWKKo7UnYivw\nhyMi5N+vHejQqSDVVGiWjAC3FFFgiIHN5l5pSPgBxmEPpZYQQ1sDFEyyzLdiwmS1\nRDMwzp/1lrr31E3kVhBWVXHD8PK6xu5wWNlbZ1nkHNkNMBY+npN/ms8Qy8df2Pk5\nlnQ9awRzTXWWjvBNr5wdXRajjUhQlJ3fplc51YpefFAKO9bMTceJskWX9dv+EDAI\n60XJ+5I3AgMBAAECggEAF/GXDKH2SeDuZq3ZextTopadJdwcXJI2XueIlsAfWgrr\nYcADdu8pdpsXeaP0TffW5+QeVP+CpBRLPkwqEUjk6XlQDWs+tfFpnsde1eTIhxGU\nFxDiXMO4r4AqG5yLBoSvkEZVnhXfHJOJoKmxmH1y/GGDf2xO7ARJf9XEvgD69wxF\nNlN8RcjJNB5/Iv0hf+hdp8HvbQEGbqPe9SXCfTqm9VF/r2zw5RL3otPwsqN0bcwk\n2o/yHxcQbrjtFIjebzHFfcITlUMh6pGf3UqWpFCG3dIT7HsvgBNXvO0FrfoVu8mE\nH6/TerOiwoGNsP++1W4N89mmCEDFgyDC5gZgWvnOQQKBgQD3GJ5qfhLxAP0fAWis\nFvpSsD1vvf+gRmhEGNkl0DZaF95Ix3V5JDNnpA42eq1vR6o2V7+GGajZWBMMyBm2\nepkiBvuoehLmEL90/Ha92kYN8Lyjib4YcmA7Idw45hsbE0/Kcro6c+/QPpuIs1A+\nO/zyry26+XTc8JRnz9OVKi/EwQKBgQDttfKLAcx6MhnR1i44+K9nu1UDQ22BVC0M\nzYa/FWb2YalpM7WnYHWhYt7r703RLEIIWpkcyu4DqKD0HGOKSq3yTYxKjc/JqEDv\nM8rwXbKyVZZwRUiGVWrZGJ8ei+B5HiEGqVt2+1heWyH+35W9nUPVrKXfUvF/xU/J\nZDJyCCe89wKBgHSz+vYfD4EmT2aaer50p8vwE0Q4f4hKWKp49e5nFZSdm03SbshF\nccXsdQ4ECO/68Ah0jy+d5OKqN20dAQ/vfW3V0Hw1E8H3fQWay9ZFRjsFTYML5m2T\nb6HeDy4MeBbkmxXp88zxvv0i5MC+uBJ8sK5KUJXzhd9n/R++x5a28xLBAoGBAK+e\nNpygLZMxpIW0eN26TMyUSBBrJmHf8JB+30gY5cKtEF4ax9/qkb0zsIIagCFDU12c\noXX2LrYhRRhUSO4Ikk5rIHSMJLFVTvPqDcpbTwQV21kCtrwYKyJM4HHO4X5Z1gh3\n4o0a0ISVS55jTNuTbmRUcw901dqRyYp+Lg61G7atAoGAaJL4ja1LTvQ0lcnMUqf8\nOzzLJsYtr4waZgMa4xWjt7Sd4kvhEFkPDCUAV9Hm29T7ZZaEDtzghQW5i4RlROtM\nXLbLFiN/+s1Y8CnbIhO9BnicnBzRfZnFkL+yhitSP/JLJ6cW3XmvdqZp5A6pjGjP\nMZThg6kofkTJugIuYGklWyY=\n-----END PRIVATE KEY-----\n"
+client_email = "firebase-adminsdk-fbsvc@db-streamlit-337bc.iam.gserviceaccount.com"
+client_id = "112841511755830503977"
+auth_uri = "https://accounts.google.com/o/oauth2/auth"
+token_uri = "https://oauth2.googleapis.com/token"
+auth_provider_x509_cert_url = "https://www.googleapis.com/oauth2/v1/certs"
+client_x509_cert_url = "https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-fbsvc%40db-streamlit-337bc.iam.gserviceaccount.com"
+universe_domain = "googleapis.com"
+storage_bucket = "db-streamlit-337bc.firebasestorage.app"
+credentials_path = ".streamlit/firebase-credentials.json"
+
+[browser]
+gatherUsageStats = false
