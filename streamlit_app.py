@@ -1,5 +1,8 @@
 import streamlit as st
 from openai import OpenAI
+import json
+import os
+from datetime import datetime
 
 # 페이지 설정
 st.set_page_config(
@@ -7,6 +10,17 @@ st.set_page_config(
     page_icon="📋",
     layout="centered",
 )
+
+# 세션 상태 초기화 (가장 먼저)
+if "admin_mode" not in st.session_state:
+    st.session_state.admin_mode = False
+if "messages" not in st.session_state:
+    st.session_state.messages = [
+        {
+            "role": "assistant",
+            "content": "안녕하세요! 육아휴직이나 4대보험 피부양자 등록과 관련하여 필요한 서류를 안내해드립니다. 어떤 것이 궁금하신가요?",
+        }
+    ]
 
 st.title("📋 인사 서류 안내 챗봇")
 st.caption("육아휴직 및 4대보험 피부양자 등록 관련 서류를 안내해드립니다.")
@@ -21,6 +35,42 @@ def get_openai_client():
         st.stop()
 
 client = get_openai_client()
+
+# 로그 파일 경로
+LOG_FILE = "chat_logs.json"
+
+# 로그 저장 함수
+def save_log(user_query: str, bot_response: str):
+    """사용자 질문과 봇 응답을 로그 파일에 저장"""
+    log_entry = {
+        "timestamp": datetime.now().isoformat(),
+        "query": user_query,
+        "response": bot_response
+    }
+    
+    logs = []
+    if os.path.exists(LOG_FILE):
+        with open(LOG_FILE, "r", encoding="utf-8") as f:
+            try:
+                logs = json.load(f)
+            except:
+                logs = []
+    
+    logs.append(log_entry)
+    
+    with open(LOG_FILE, "w", encoding="utf-8") as f:
+        json.dump(logs, f, ensure_ascii=False, indent=2)
+
+# 로그 읽기 함수
+def load_logs():
+    """저장된 모든 로그 읽기"""
+    if os.path.exists(LOG_FILE):
+        with open(LOG_FILE, "r", encoding="utf-8") as f:
+            try:
+                return json.load(f)
+            except:
+                return []
+    return []
 
 # 자주 묻는 질문 정의
 FAQ_QUESTIONS = [
@@ -87,6 +137,8 @@ if "messages" not in st.session_state:
             "content": "안녕하세요! 육아휴직이나 4대보험 피부양자 등록과 관련하여 필요한 서류를 안내해드립니다. 어떤 것이 궁금하신가요?",
         }
     ]
+if "admin_mode" not in st.session_state:
+    st.session_state.admin_mode = False
 
 # 대화 히스토리 표시
 for message in st.session_state.messages:
@@ -129,6 +181,8 @@ if st.session_state.messages and st.session_state.messages[-1]["role"] == "user"
                 placeholder.error(full_response)
 
         st.session_state.messages.append({"role": "assistant", "content": full_response})
+        # 로그 저장
+        save_log(last_message["content"], full_response)
         st.rerun()
 
 # 사용자 입력 처리
@@ -162,10 +216,59 @@ if prompt := st.chat_input("질문을 입력하세요..."):
             placeholder.error(full_response)
 
     st.session_state.messages.append({"role": "assistant", "content": full_response})
+    # 로그 저장
+    save_log(prompt, full_response)
+
+# 관리자 모드 페이지 (맨 아래)
+if st.session_state.admin_mode:
+    st.divider()
+    st.subheader("🔐 관리자 모드")
+    
+    logs = load_logs()
+    
+    if logs:
+        st.info(f"총 {len(logs)}개의 검색 기록이 있습니다.")
+        
+        # 통계
+        col1, col2 = st.columns(2)
+        with col1:
+            st.metric("총 검색 수", len(logs))
+        
+        # 로그 표시
+        st.subheader("📊 검색 이력")
+        
+        for i, log in enumerate(reversed(logs), 1):
+            with st.expander(f"{i}. {log['query'][:50]}... ({log['timestamp'][:10]})"):
+                st.markdown("**사용자 질문:**")
+                st.write(log['query'])
+                st.markdown("**챗봇 답변:**")
+                st.write(log['response'])
+                st.caption(f"시간: {log['timestamp']}")
+        
+        # 로그 다운로드
+        st.divider()
+        col1, col2 = st.columns(2)
+        with col1:
+            log_json = json.dumps(logs, ensure_ascii=False, indent=2)
+            st.download_button(
+                "📥 로그 다운로드 (JSON)",
+                log_json,
+                "chat_logs.json",
+                "application/json"
+            )
+        
+        with col2:
+            if st.button("🗑️ 모든 로그 삭제", type="secondary"):
+                os.remove(LOG_FILE)
+                st.success("로그가 삭제되었습니다.")
+                st.rerun()
+    else:
+        st.info("아직 검색 기록이 없습니다.")
 
 # 사이드바에 안내 정보 추가
 with st.sidebar:
     st.header("📌 주요 안내")
+    
     st.markdown("### 자주 묻는 질문")
     st.caption("질문을 클릭하면 챗봇이 답변해드립니다.")
     
@@ -185,3 +288,22 @@ with st.sidebar:
             }
         ]
         st.rerun()
+    
+    st.divider()
+    
+    # 관리자 로그인
+    st.markdown("### 🔑 관리자")
+    if not st.session_state.admin_mode:
+        admin_password = st.text_input("관리자 비밀번호", type="password", key="admin_pwd")
+        if admin_password and st.button("로그인"):
+            if admin_password == st.secrets.get("ADMIN_PASSWORD", "admin123"):
+                st.session_state.admin_mode = True
+                st.success("관리자 모드 활성화!")
+                st.rerun()
+            else:
+                st.error("비밀번호가 틀렸습니다.")
+    else:
+        st.success("✅ 관리자 모드 활성화")
+        if st.button("로그아웃"):
+            st.session_state.admin_mode = False
+            st.rerun()
